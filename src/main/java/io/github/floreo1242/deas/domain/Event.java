@@ -40,4 +40,7 @@ public class Event {
 
     @OneToMany(mappedBy = "event")
     private List<Apply> applies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "event")
+    private List<Question> questions = new ArrayList<>();
 }
