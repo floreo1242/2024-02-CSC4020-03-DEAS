@@ -20,12 +20,14 @@ public class Event {
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
     private EventTag tag;
 
     private String description;
 
     private Integer maxParticipant;
 
+    @Enumerated(EnumType.STRING)
     private EventStatus status;
 
     private LocalDateTime applyStartTime;

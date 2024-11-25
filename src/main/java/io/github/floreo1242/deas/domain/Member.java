@@ -25,6 +25,7 @@ public class Member {
 
     private String contact;
 
+    @Enumerated(EnumType.STRING)
     private MemberType type;
 
     @OneToMany(mappedBy = "member")
