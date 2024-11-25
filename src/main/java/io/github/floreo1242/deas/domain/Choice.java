@@ -5,27 +5,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Question {
+public class Choice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private Event event;
+    @JoinColumn(name = "question_id")
+    private Question question;
 
     private String content;
-
-    @Enumerated(EnumType.STRING)
-    private QuestionType type;
-
-    @OneToMany(mappedBy = "question")
-    private List<Choice> choices = new ArrayList<>();
 }
