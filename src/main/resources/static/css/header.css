@@ -1,0 +1,48 @@
+header {
+  position: relative;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 15px 30px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header a {
+  text-decoration: none;
+  font-weight: normal;
+  color: #333;
+  margin-right: 15px;
+}
+
+header a:hover {
+  color: #007bff;
+}
+
+header .logout-button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 3px;
+  text-decoration: none;
+  font-weight: normal;
+  transition: background-color 0.3s ease;
+  margin-left: 15px;
+}
+
+header .logout-button:hover {
+  background-color: #0056b3;
+}
+
+header p {
+  margin: 0 15px;
+  font-size: 14px;
+  color: #555;
+}
+
+header div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
