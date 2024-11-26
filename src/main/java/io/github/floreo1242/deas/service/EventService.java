@@ -2,13 +2,11 @@ package io.github.floreo1242.deas.service;
 
 import io.github.floreo1242.deas.DTO.request.CreateEventRequest;
 import io.github.floreo1242.deas.domain.Event;
-import io.github.floreo1242.deas.domain.EventStatus;
 import io.github.floreo1242.deas.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,11 +19,6 @@ public class EventService {
     @Transactional
     public boolean createEvent(CreateEventRequest request) {
         try {
-            LocalDateTime now = LocalDateTime.now();
-            EventStatus eventStatus = EventStatus.PENDING;
-            if (now.isAfter(request.getApplyStartTime()) && now.isBefore(request.getApplyEndTime())) {
-                eventStatus = EventStatus.IN_PROGRESS;
-            }
             Event event = Event.builder()
                     .name(request.getName())
                     .tag(request.getTag())
@@ -33,7 +26,6 @@ public class EventService {
                     .maxParticipant(request.getMaxParticipant())
                     .applyStartTime(request.getApplyStartTime())
                     .applyEndTime(request.getApplyEndTime())
-                    .status(eventStatus)
                     .organizer(request.getOrganizer())
                     .contact(request.getContact())
                     .build();
@@ -47,5 +39,9 @@ public class EventService {
 
     public List<Event> getEventList() {
         return eventRepository.findAll();
+    }
+
+    public Event getEventById(Integer eventId) {
+        return eventRepository.findById(eventId).orElse(null);
     }
 }

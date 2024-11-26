@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -38,9 +39,13 @@ public class WebController {
 
     @GetMapping("/event")
     public String event(Model model) {
-        List<Event> eventList = eventService.getEventList();
-        System.out.println(eventList.get(0).getStatus());
         model.addAttribute("events", eventService.getEventList());
         return "event";
+    }
+
+    @GetMapping("/event/{eventId}")
+    public String event(@PathVariable Integer eventId, Model model) {
+        model.addAttribute("event", eventService.getEventById(eventId));
+        return "event-detail";
     }
 }

@@ -28,9 +28,6 @@ public class Event {
 
     private Integer maxParticipant;
 
-    @Enumerated(EnumType.STRING)
-    private EventStatus status;
-
     private LocalDateTime applyStartTime;
 
     private LocalDateTime applyEndTime;
@@ -40,12 +37,11 @@ public class Event {
     private String contact;
 
     @Builder
-    public Event(String name, EventTag tag, String description, Integer maxParticipant, EventStatus status, LocalDateTime applyStartTime, LocalDateTime applyEndTime, String organizer, String contact) {
+    public Event(String name, EventTag tag, String description, Integer maxParticipant, LocalDateTime applyStartTime, LocalDateTime applyEndTime, String organizer, String contact) {
         this.name = name;
         this.tag = tag;
         this.description = description;
         this.maxParticipant = maxParticipant;
-        this.status = status;
         this.applyStartTime = applyStartTime;
         this.applyEndTime = applyEndTime;
         this.organizer = organizer;

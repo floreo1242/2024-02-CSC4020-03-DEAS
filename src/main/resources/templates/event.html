@@ -48,13 +48,28 @@
                 th:text="${event.maxParticipant == 0 ? '제한 없음' : event.maxParticipant}"
               ></td>
               <td>
-                <span th:switch="${#strings.toString(event.status)}">
-                  <span th:case="PENDING">모집 전</span>
-                  <span th:case="IN_PROGRESS">모집 중</span>
-                  <span th:case="COMPLETE">모집 완료</span>
-                  <span th:case="*">없음</span>
+                <span
+                  th:if="${event.applyStartTime.isAfter(T(java.time.LocalDateTime).now())}"
+                >
+                  모집 전
+                </span>
+                <span
+                  th:if="${event.applyStartTime.isBefore(T(java.time.LocalDateTime).now()) and event.applyEndTime.isAfter(T(java.time.LocalDateTime).now())}"
+                >
+                  모집 중
+                </span>
+                <span
+                  th:if="${event.applyEndTime.isBefore(T(java.time.LocalDateTime).now())}"
+                >
+                  모집 완료
+                </span>
+                <span
+                  th:if="${event.applyStartTime == null or event.applyEndTime == null}"
+                >
+                  없음
                 </span>
               </td>
+
               <td
                 th:text="${#temporals.format(event.applyStartTime, 'yyyy-MM-dd HH:mm')}"
               ></td>
