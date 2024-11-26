@@ -1,0 +1,50 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DEAS | 사용자 등록</title>
+    <link rel="stylesheet" href="/css/global.css">
+</head>
+<body>
+<div class="container">
+    <h1>사용자 등록</h1>
+    <form th:action="@{/register}" method="post">
+        <div>
+            <input type="radio" id="student" name="type" value="STUDENT" required>
+            <label for="student">학생</label>
+            <input type="radio" id="staff" name="type" value="STAFF" required>
+            <label for="staff">교직원</label>
+        </div>
+        <div>
+            <label for="id">학번/교번</label>
+            <input type="text" id="id" name="id" required>
+        </div>
+        <div>
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" placeholder="8자리 이상" required>
+        </div>
+        <div>
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name" placeholder="홍길동" required>
+        </div>
+        <div>
+            <label for="affiliation">소속</label>
+            <input type="text" id="affiliation" name="affiliation" placeholder="컴퓨터공학전공" required>
+        </div>
+        <div>
+            <label for="contact">연락처</label>
+            <input type="text" id="contact" name="contact" placeholder="010-1234-5678" required>
+        </div>
+        <div>
+            <button type="submit">등록</button>
+        </div>
+        <div th:if="${error}">
+            <p style="color: red;">[[${error}]]</p>
+        </div>
+    </form>
+</div>
+</body>
+</html>
