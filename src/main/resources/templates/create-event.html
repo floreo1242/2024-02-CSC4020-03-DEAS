@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>DEAS | 행사 등록</title>
+    <link rel="stylesheet" href="/css/global.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>행사 등록</h1>
+      <form th:action="@{/event}" method="post">
+        <div>
+          <label for="name">행사명</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+        <div>
+          <input type="radio" id="session" name="tag" value="SESSION" />
+          <label for="session">세션</label>
+          <input type="radio" id="seminar" name="tag" value="SEMINAR" />
+          <label for="seminar">세미나</label>
+          <input type="radio" id="club" name="tag" value="CLUB" />
+          <label for="club">동아리</label>
+          <input type="radio" id="misc" name="tag" value="MISC" />
+          <label for="misc">기타</label>
+        </div>
+        <div>
+          <label for="description">행사 설명</label>
+          <textarea id="description" name="description" required></textarea>
+        </div>
+        <div>
+          <label for="maxParticipant">최대 참가자 수</label>
+          <input
+            type="number"
+            id="maxParticipant"
+            name="maxParticipant"
+            placeholder="제한 없음은 0"
+            required
+          />
+        </div>
+        <div>
+          <label for="applyStartTime">신청 시작일</label>
+          <input
+            type="datetime-local"
+            id="applyStartTime"
+            name="applyStartTime"
+            required
+          />
+        </div>
+        <div>
+          <label for="applyEndTime">신청 종료일</label>
+          <input
+            type="datetime-local"
+            id="applyEndTime"
+            name="applyEndTime"
+            required
+          />
+        </div>
+        <div>
+          <label for="organizer">주최처</label>
+          <input type="text" id="organizer" name="organizer" required />
+        </div>
+        <div>
+          <label for="contact">문의 연락처</label>
+          <input type="text" id="contact" name="contact" required />
+        </div>
+        <div>
+          <button type="submit">등록</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

@@ -2,6 +2,7 @@ package io.github.floreo1242.deas.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,6 +38,19 @@ public class Event {
     private String organizer;
 
     private String contact;
+
+    @Builder
+    public Event(String name, EventTag tag, String description, Integer maxParticipant, EventStatus status, LocalDateTime applyStartTime, LocalDateTime applyEndTime, String organizer, String contact) {
+        this.name = name;
+        this.tag = tag;
+        this.description = description;
+        this.maxParticipant = maxParticipant;
+        this.status = status;
+        this.applyStartTime = applyStartTime;
+        this.applyEndTime = applyEndTime;
+        this.organizer = organizer;
+        this.contact = contact;
+    }
 
     @OneToMany(mappedBy = "event")
     private List<Apply> applies = new ArrayList<>();
