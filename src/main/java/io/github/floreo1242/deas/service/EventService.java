@@ -15,10 +15,12 @@ import java.util.List;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final QuestionService questionService;
 
     @Transactional
     public boolean createEvent(CreateEventRequest request) {
         try {
+            System.out.println("Apply End Time: " + request.getApplyEndTime());
             Event event = Event.builder()
                     .name(request.getName())
                     .tag(request.getTag())
@@ -30,6 +32,9 @@ public class EventService {
                     .contact(request.getContact())
                     .build();
             eventRepository.save(event);
+            for (CreateEventRequest.QuestionRequest questionRequest : request.getQuestions()) {
+                questionService.createQuestion(event, questionRequest);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;

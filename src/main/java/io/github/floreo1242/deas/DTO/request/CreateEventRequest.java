@@ -1,9 +1,12 @@
 package io.github.floreo1242.deas.DTO.request;
 
 import io.github.floreo1242.deas.domain.EventTag;
+import io.github.floreo1242.deas.domain.QuestionType;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class CreateEventRequest {
@@ -23,4 +26,18 @@ public class CreateEventRequest {
     private String organizer;
 
     private String contact;
+
+    private String locationId;
+
+    private List<QuestionRequest> questions;
+
+    @Data
+    public static class QuestionRequest {
+
+        private String content;
+
+        private QuestionType type;
+
+        private List<String> choice;
+    }
 }

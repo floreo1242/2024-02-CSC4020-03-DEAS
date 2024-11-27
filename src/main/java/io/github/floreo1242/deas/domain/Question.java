@@ -2,6 +2,7 @@ package io.github.floreo1242.deas.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,6 +26,13 @@ public class Question {
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
+
+    @Builder
+    public Question(Event event, String content, QuestionType type) {
+        this.event = event;
+        this.content = content;
+        this.type = type;
+    }
 
     @OneToMany(mappedBy = "question")
     private List<Choice> choices = new ArrayList<>();

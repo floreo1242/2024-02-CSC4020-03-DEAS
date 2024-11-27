@@ -2,6 +2,7 @@ package io.github.floreo1242.deas.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,4 +20,10 @@ public class Choice {
     private Question question;
 
     private String content;
+
+    @Builder
+    public Choice(Question question, String content) {
+        this.question = question;
+        this.content = content;
+    }
 }

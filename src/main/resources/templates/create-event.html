@@ -14,14 +14,19 @@
     <header th:fragment="header"></header>
     <div class="container">
       <h1>행사 등록</h1>
-      <form th:action="@{/event}" method="post">
+      <form id="createEventForm" th:action="@{/event}" method="post">
+        <input
+          type="hidden"
+          th:name="${_csrf.parameterName}"
+          th:value="${_csrf.token}"
+        />
         <div>
           <label for="name">행사명</label>
           <input type="text" id="name" name="name" required />
         </div>
         <div>
           <input type="radio" id="session" name="tag" value="SESSION" />
-          <label for="session">세션</label>
+          <label for="session">설명회</label>
           <input type="radio" id="seminar" name="tag" value="SEMINAR" />
           <label for="seminar">세미나</label>
           <input type="radio" id="club" name="tag" value="CLUB" />
@@ -50,6 +55,7 @@
             id="applyStartTime"
             name="applyStartTime"
             required
+            onchange="filterLocations()"
           />
         </div>
         <div>
@@ -59,7 +65,14 @@
             id="applyEndTime"
             name="applyEndTime"
             required
+            onchange="filterLocations()"
           />
+        </div>
+        <div>
+          <label for="locationId">장소</label>
+          <select id="locationId" name="locationId" required>
+            <option value="" disabled selected>장소를 선택하세요</option>
+          </select>
         </div>
         <div>
           <label for="organizer">주최처</label>
@@ -70,9 +83,200 @@
           <input type="text" id="contact" name="contact" required />
         </div>
         <div>
-          <button type="submit">등록</button>
+          <p>설문조사</p>
+          <div id="questionsContainer"></div>
+          <button type="button" onclick="addQuestion()">질문 추가</button>
+        </div>
+        <div>
+          <button type="button" onclick="submitForm()">등록</button>
         </div>
       </form>
     </div>
   </body>
+  <script>
+    function submitForm() {
+      const form = document.getElementById('createEventForm');
+      const formData = new FormData(form);
+      const data = {};
+
+      // CSRF 토큰 추가
+      const csrfToken = document.querySelector('input[name="_csrf"]').value;
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken,
+      };
+
+      // 기본 폼 데이터 수집
+      formData.forEach((value, key) => {
+        if (!key.startsWith('questions') && !key.startsWith('options')) {
+          if (data[key]) {
+            if (!Array.isArray(data[key])) {
+              data[key] = [data[key]];
+            }
+            data[key].push(value);
+          } else {
+            data[key] = value;
+          }
+        }
+      });
+
+      // 질문 데이터 수집
+      const questions = [];
+      const questionElements = document.querySelectorAll(
+        '#questionsContainer .question'
+      );
+      questionElements.forEach((questionElement, index) => {
+        const content = questionElement.querySelector(
+          'input[name="questions[]"]'
+        ).value;
+        const type = questionElement.querySelector(
+          `input[name="questionType${index}"]:checked`
+        ).value;
+        const choice = [];
+
+        if (type === 'CHOICE') {
+          const optionInputs = questionElement.querySelectorAll(
+            '.optionsContainer input[name="choice[]"]'
+          );
+          optionInputs.forEach((optionInput) => {
+            choice.push(optionInput.value);
+          });
+        }
+
+        questions.push({ content, type, choice });
+      });
+
+      data.questions = questions;
+
+      // JSON 데이터 전송
+      fetch('/event', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(data),
+      })
+        .then((response) => {
+          if (response.redirected) {
+            window.location.href = response.url; // 리다이렉트 URL로 이동
+          } else {
+            return response.json();
+          }
+        })
+        .then((data) => console.log(data))
+        .catch((error) => console.error(error));
+    }
+
+    function filterLocations() {
+      const applyStartTime = document.getElementById('applyStartTime').value;
+      const applyEndTime = document.getElementById('applyEndTime').value;
+
+      if (applyStartTime && applyEndTime) {
+        fetch(
+          `/api/available-locations?startTime=${applyStartTime}&endTime=${applyEndTime}`
+        )
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((locations) => {
+            const locationSelect = document.getElementById('locationId');
+            // 기본 옵션 추가
+            locationSelect.innerHTML =
+              '<option value="" disabled selected>장소를 선택하세요</option>';
+
+            // 응답 데이터로 드롭다운 옵션 생성
+            if (locations.length > 0) {
+              locations.forEach((location) => {
+                const option = document.createElement('option');
+                option.textContent = `${location.id} (${location.capacity})`;
+                option.value = location.id;
+                locationSelect.appendChild(option);
+              });
+            } else {
+              const option = document.createElement('option');
+              option.textContent = '사용 가능한 장소가 없습니다';
+              option.disabled = true;
+              locationSelect.appendChild(option);
+            }
+          })
+          .catch((error) => {
+            console.error('Error fetching locations:', error);
+            alert('장소를 불러오는 중 문제가 발생했습니다. 다시 시도하세요.');
+          });
+      }
+    }
+
+    function addQuestion() {
+      const questionsContainer = document.getElementById('questionsContainer');
+      const newDiv = document.createElement('div');
+      newDiv.className = 'question';
+      const questionIndex = questionsContainer.children.length;
+      newDiv.innerHTML = `
+        <label>질문</label>
+        <input type="text" name="questions[]" required />
+        <div>
+          <label>
+            <input type="radio" name="questionType${questionIndex}" value="ESSAY" onchange="toggleOptions(this)" required selected /> 단답형
+          </label>
+          <label>
+            <input type="radio" name="questionType${questionIndex}" value="CHOICE" onchange="toggleOptions(this)" required /> 객관식
+          </label>
+        </div>
+        <div class="options" style="display: none;">
+          <label>선택지</label>
+          <button type="button" onclick="addOption(this)">선택지 추가</button>
+          <div class="optionsContainer"></div>
+        </div>
+        <button type="button" onclick="removeQuestion(this)">삭제</button>
+      `;
+      questionsContainer.appendChild(newDiv);
+      updateQuestionLabels();
+    }
+
+    function toggleOptions(selectElement) {
+      const optionsDiv = selectElement
+        .closest('.question')
+        .querySelector('.options');
+      if (selectElement.value === 'CHOICE') {
+        if (optionsDiv) {
+          optionsDiv.style.display = 'block';
+        } else {
+          console.error('Element not found');
+        }
+      } else {
+        if (optionsDiv) {
+          optionsDiv.style.display = 'none';
+        } else {
+          console.error('Element not found');
+        }
+      }
+    }
+
+    function addOption(button) {
+      const optionsContainer =
+        button.parentElement.querySelector('.optionsContainer');
+      const optionInput = document.createElement('input');
+      optionInput.type = 'text';
+      optionInput.name = 'choice[]';
+      optionInput.placeholder = '선택지를 입력하세요';
+      optionsContainer.appendChild(optionInput);
+    }
+
+    function removeQuestion(button) {
+      const questionDiv = button.parentElement;
+      questionDiv.remove();
+      updateQuestionLabels();
+    }
+
+    function updateQuestionLabels() {
+      const questions = document.querySelectorAll(
+        '#questionsContainer .question'
+      );
+      questions.forEach((question, index) => {
+        const label = question.querySelector('label');
+        label.textContent = `질문 ${index + 1}`;
+      });
+    }
+  </script>
 </html>

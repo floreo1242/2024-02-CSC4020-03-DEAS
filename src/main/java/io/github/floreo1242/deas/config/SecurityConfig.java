@@ -20,7 +20,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/register").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/register", "/api").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
