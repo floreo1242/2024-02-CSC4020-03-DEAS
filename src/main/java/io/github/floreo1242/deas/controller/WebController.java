@@ -1,8 +1,8 @@
 package io.github.floreo1242.deas.controller;
 
-import io.github.floreo1242.deas.domain.Event;
 import io.github.floreo1242.deas.service.CustomUserDetails;
 import io.github.floreo1242.deas.service.EventService;
+import io.github.floreo1242.deas.service.QuestionService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,15 +11,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
 
 @Controller
 public class WebController {
 
     private final EventService eventService;
+    private final QuestionService questionService;
 
-    public WebController(EventService eventService) {
+    public WebController(EventService eventService, QuestionService questionService) {
         this.eventService = eventService;
+        this.questionService = questionService;
     }
 
     @GetMapping("/home")
@@ -47,5 +48,12 @@ public class WebController {
     public String event(@PathVariable Integer eventId, Model model) {
         model.addAttribute("event", eventService.getEventById(eventId));
         return "event-detail";
+    }
+
+    @GetMapping("/event/apply/{eventId}")
+    public String apply(@PathVariable Integer eventId, Model model) {
+        model.addAttribute("eventId", eventId);
+        model.addAttribute("questions", questionService.getQuestions(eventId));
+        return "event-apply";
     }
 }

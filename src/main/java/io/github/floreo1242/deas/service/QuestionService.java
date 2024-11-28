@@ -1,6 +1,7 @@
 package io.github.floreo1242.deas.service;
 
 import io.github.floreo1242.deas.DTO.request.CreateEventRequest;
+import io.github.floreo1242.deas.DTO.response.QuestionResponse;
 import io.github.floreo1242.deas.domain.Choice;
 import io.github.floreo1242.deas.domain.Event;
 import io.github.floreo1242.deas.domain.Question;
@@ -10,6 +11,9 @@ import io.github.floreo1242.deas.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -40,5 +44,18 @@ public class QuestionService {
                 }
             }
         }
+    }
+
+    public List<QuestionResponse> getQuestions(Integer eventId) {
+        List<Question> questions = questionRepository.findByEventId(eventId);
+        return questions.stream()
+                .map(question -> QuestionResponse.builder()
+                        .id(question.getId())
+                        .content(question.getContent())
+                        .type(question.getType())
+                        .choices(question.getChoices())
+                        .build()
+                )
+                .collect(Collectors.toList());
     }
 }

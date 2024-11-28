@@ -2,6 +2,7 @@ package io.github.floreo1242.deas.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,15 @@ public class Answer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "choice_id")
     private Choice choice;
+
+    private String answer;
+
+    @Builder
+    public Answer(Apply apply, Question question, QuestionType type, Choice choice, String answer) {
+        this.apply = apply;
+        this.question = question;
+        this.type = type;
+        this.choice = choice;
+        this.answer = answer;
+    }
 }

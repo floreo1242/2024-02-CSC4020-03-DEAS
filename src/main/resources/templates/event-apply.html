@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>DEAS | 지원하기</title>
+    <link rel="stylesheet" href="/css/global.css" />
+  </head>
+  <body>
+    <header th:fragment="header"></header>
+    <main class="event-apply-page">
+      <h1>행사 지원</h1>
+      <form th:action="@{/event/apply}" method="post">
+        <input type="hidden" name="eventId" th:value="${eventId}" />
+        <div th:each="questionResponse : ${questions}">
+          <h2 th:text="${questionResponse.content}">질문 내용</h2>
+          <div th:if="${#strings.toString(questionResponse.type) == 'CHOICE'}">
+            <div th:each="choice : ${questionResponse.choices}">
+              <input
+                type="radio"
+                th:name="|answers[${questionResponse.id}]|"
+                th:value="${choice.id}"
+              />
+              <label th:text="${choice.content}">선택지 내용</label>
+            </div>
+          </div>
+          <div th:if="${#strings.toString(questionResponse.type) == 'ESSAY'}">
+            <textarea
+              th:name="|answers[${questionResponse.id}]|"
+              rows="4"
+              cols="50"
+              placeholder="답변을 입력하세요"
+            ></textarea>
+          </div>
+        </div>
+        <button type="submit">제출</button>
+      </form>
+    </main>
+  </body>
+</html>
