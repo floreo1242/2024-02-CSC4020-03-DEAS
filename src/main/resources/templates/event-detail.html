@@ -54,8 +54,12 @@
         <p>[[${event.organizer}]]</p>
         <h2>설명</h2>
         <p>[[${event.description}]]</p>
-        <h2>참가 신청</h2>
-        <a th:href="@{'/event/apply/' + ${event.id}}">신청하기</a>
+        <div
+          th:if="${event.applyStartTime.isBefore(T(java.time.LocalDateTime).now()) and event.applyEndTime.isAfter(T(java.time.LocalDateTime).now())}"
+        >
+          <h2>참가 신청</h2>
+          <a th:href="@{'/event/apply/' + ${event.id}}">신청하기</a>
+        </div>
       </div>
     </main>
   </body>
