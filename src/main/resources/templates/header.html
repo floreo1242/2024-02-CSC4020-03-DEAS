@@ -12,7 +12,7 @@
   <body>
     <header th:fragment="header">
       <div>
-        <a th:href="@{/home}">DEAS</a>
+        <a th:href="@{/}">DEAS</a>
         <div>
           <p>[[${session.id}]] ([[${session.name}]])님</p>
           <a th:href="@{/logout}" class="logout-button">로그아웃</a>
