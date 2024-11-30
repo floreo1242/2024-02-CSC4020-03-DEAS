@@ -55,6 +55,25 @@ public class EventService {
         return true;
     }
 
+    @Transactional
+    public boolean editEvent(CreateEventRequest request, Integer eventId) {
+        try {
+            Event event = eventRepository.findById(eventId)
+                    .orElseThrow(() -> new RuntimeException("Event not found"));
+            event.setName(request.getName());
+            event.setTag(request.getTag());
+            event.setDescription(request.getDescription());
+            event.setMaxParticipant(request.getMaxParticipant());
+            event.setOrganizer(request.getOrganizer());
+            event.setContact(request.getContact());
+            eventRepository.save(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     public List<Event> getEventList() {
         return eventRepository.findAll();
     }

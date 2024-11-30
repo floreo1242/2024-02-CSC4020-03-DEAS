@@ -33,6 +33,21 @@ public class EventController {
         return "redirect:/event";
     }
 
+    @GetMapping("/event/edit/{eventId}")
+    public String editEvent(@PathVariable Integer eventId, Model model) {
+        model.addAttribute("event", eventService.getEventById(eventId));
+        return "edit-event";
+    }
+
+    @PatchMapping("/event/{eventId}")
+    public String editEvent(@RequestBody CreateEventRequest request, @PathVariable Integer eventId) {
+        boolean isCreated = eventService.editEvent(request, eventId);
+        if (!isCreated) {
+            return "redirect:/event/create";
+        }
+        return "redirect:/event";
+    }
+
     @GetMapping("/event/create")
     public String createEvent() {
         return "create-event";
