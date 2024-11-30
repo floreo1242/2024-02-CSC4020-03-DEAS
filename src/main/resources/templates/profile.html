@@ -25,7 +25,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr th:each="eventItem : ${createdEvents}">
+            <tr
+              th:each="eventItem : ${createdEvents}"
+              th:onclick="|location.href='/event/' + [[${eventItem.event.id}]]|"
+            >
               <td>
                 <a th:href="@{'/event/' + ${eventItem.event.id}}">
                   <span th:text="${eventItem.event.name}">행사명</span>
@@ -48,12 +51,10 @@
                   모집 완료
                 </span>
               </td>
-              <td th:text="'지원자 수: ' + ${eventItem.participantCount}">
-                지원자 수
-              </td>
+              <td th:text="${eventItem.participantCount}">지원자 수</td>
               <td>
                 <a
-                  th:href="@{'/event/apply/' + ${eventItem.event.id}}"
+                  th:href="@{'/event/' + ${eventItem.event.id} + '/applications'}"
                   class="button"
                   >지원정보 보기</a
                 >
@@ -69,11 +70,14 @@
             <tr>
               <th>행사명</th>
               <th>모집상태</th>
-              <th>지원정보 보기</th>
+              <th>마감일</th>
             </tr>
           </thead>
           <tbody>
-            <tr th:each="event : ${appliedEvents}">
+            <tr
+              th:each="event : ${appliedEvents}"
+              th:onclick="|location.href='/event/' + [[${event.id}]]|"
+            >
               <td>
                 <a th:href="@{'/event/' + ${event.id}}">
                   <span th:text="${event.name}">행사명</span>
@@ -96,11 +100,7 @@
                   모집 완료
                 </span>
               </td>
-              <td>
-                <a th:href="@{'/event/apply/' + ${event.id}}" class="button"
-                  >지원정보 보기</a
-                >
-              </td>
+              <td th:text="${event.applyEndTime}">마감일</td>
             </tr>
           </tbody>
         </table>

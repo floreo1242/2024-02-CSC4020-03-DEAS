@@ -14,4 +14,6 @@ public interface ApplyRepository extends JpaRepository<Apply, Integer> {
     List<Apply> findByMember(Member member);
 
     Integer countByEvent(Event event);
+
+    List<Apply> findByEvent(Event event);
 }

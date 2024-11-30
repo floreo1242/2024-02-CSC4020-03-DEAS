@@ -2,6 +2,7 @@ package io.github.floreo1242.deas.controller;
 
 import io.github.floreo1242.deas.DTO.request.ApplyEventRequest;
 import io.github.floreo1242.deas.DTO.request.CreateEventRequest;
+import io.github.floreo1242.deas.service.ApplyService;
 import io.github.floreo1242.deas.service.EventService;
 import io.github.floreo1242.deas.service.QuestionService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public class EventController {
 
     private final EventService eventService;
     private final QuestionService questionService;
+    private final ApplyService applyService;
 
     @GetMapping("/event")
     public String event(Model model) {
@@ -56,5 +58,11 @@ public class EventController {
             return "redirect:/event/" + request.getEventId();
         }
         return "redirect:/event";
+    }
+
+    @GetMapping("/event/{eventId}/applications")
+    public String getApply(@PathVariable Integer eventId, Model model) {
+        model.addAttribute("applyDetailResponse", applyService.getApplyDetails(eventId));
+        return "apply-detail";
     }
 }
