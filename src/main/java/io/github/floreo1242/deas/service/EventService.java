@@ -2,6 +2,7 @@ package io.github.floreo1242.deas.service;
 
 import io.github.floreo1242.deas.DTO.request.ApplyEventRequest;
 import io.github.floreo1242.deas.DTO.request.CreateEventRequest;
+import io.github.floreo1242.deas.DTO.response.EventParticipantResponse;
 import io.github.floreo1242.deas.domain.*;
 import io.github.floreo1242.deas.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -107,5 +109,27 @@ public class EventService {
             return false;
         }
         return true;
+    }
+
+    public List<EventParticipantResponse> getEventByCreator(String creatorId) {
+        Member creator = memberRepository.findById(creatorId)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+        List<Event> events = eventRepository.findByCreator(creator);
+        return events.stream()
+                .map(event -> EventParticipantResponse.builder()
+                        .event(event)
+                        .participantCount(applyRepository.countByEvent(event))
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
+
+    public List<Event> getEventByApply(String memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+        List<Apply> applies = applyRepository.findByMember(member);
+        return applies.stream()
+                .map(Apply::getEvent)
+                .collect(Collectors.toList());
     }
 }

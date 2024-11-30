@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <title>DEAS | 지원 정보</title>
+  </head>
+  <body>
+    <div th:replace="header :: header"></div>
+    <main class="profile">
+      <h1>내가 생성한 행사 정보</h1>
+      <div class="container">
+        <table class="event-table">
+          <thead>
+            <tr>
+              <th>행사명</th>
+              <th>모집상태</th>
+              <th>지원자 수</th>
+              <th>지원정보 보기</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="eventItem : ${createdEvents}">
+              <td>
+                <a th:href="@{'/event/' + ${eventItem.event.id}}">
+                  <span th:text="${eventItem.event.name}">행사명</span>
+                </a>
+              </td>
+              <td>
+                <span
+                  th:if="${eventItem.event.applyStartTime.isAfter(T(java.time.LocalDateTime).now())}"
+                >
+                  모집 전
+                </span>
+                <span
+                  th:if="${eventItem.event.applyStartTime.isBefore(T(java.time.LocalDateTime).now()) and eventItem.event.applyEndTime.isAfter(T(java.time.LocalDateTime).now())}"
+                >
+                  모집 중
+                </span>
+                <span
+                  th:if="${eventItem.event.applyEndTime.isBefore(T(java.time.LocalDateTime).now())}"
+                >
+                  모집 완료
+                </span>
+              </td>
+              <td th:text="'지원자 수: ' + ${eventItem.participantCount}">
+                지원자 수
+              </td>
+              <td>
+                <a
+                  th:href="@{'/event/apply/' + ${eventItem.event.id}}"
+                  class="button"
+                  >지원정보 보기</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h1>내가 지원한 행사 정보</h1>
+      <div class="container">
+        <table class="event-table">
+          <thead>
+            <tr>
+              <th>행사명</th>
+              <th>모집상태</th>
+              <th>지원정보 보기</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="event : ${appliedEvents}">
+              <td>
+                <a th:href="@{'/event/' + ${event.id}}">
+                  <span th:text="${event.name}">행사명</span>
+                </a>
+              </td>
+              <td>
+                <span
+                  th:if="${event.applyStartTime.isAfter(T(java.time.LocalDateTime).now())}"
+                >
+                  모집 전
+                </span>
+                <span
+                  th:if="${event.applyStartTime.isBefore(T(java.time.LocalDateTime).now()) and event.applyEndTime.isAfter(T(java.time.LocalDateTime).now())}"
+                >
+                  모집 중
+                </span>
+                <span
+                  th:if="${event.applyEndTime.isBefore(T(java.time.LocalDateTime).now())}"
+                >
+                  모집 완료
+                </span>
+              </td>
+              <td>
+                <a th:href="@{'/event/apply/' + ${event.id}}" class="button"
+                  >지원정보 보기</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>
