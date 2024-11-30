@@ -40,4 +40,7 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Apply> applies = new ArrayList<>();
+
+    @OneToOne(mappedBy = "creator")
+    private Event createdEvent;
 }

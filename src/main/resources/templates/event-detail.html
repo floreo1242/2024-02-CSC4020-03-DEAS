@@ -60,6 +60,22 @@
           <h2>참가 신청</h2>
           <a th:href="@{'/event/apply/' + ${event.id}}">신청하기</a>
         </div>
+        <div class="action-buttons">
+          <div th:if="${session.id != null and session.id == event.creator.id}">
+            <a th:href="@{'/event/edit/' + ${event.id}}" class="button">수정</a>
+            <a th:href="@{'/event/delete/' + ${event.id}}" class="button"
+              >삭제</a
+            >
+          </div>
+          <div
+            th:each="apply : ${event.applies}"
+            th:if="${apply.member.id == session.id}"
+          >
+            <a th:href="@{'/event/answer/edit/' + ${event.id}}" class="button"
+              >답변수정</a
+            >
+          </div>
+        </div>
       </div>
     </main>
   </body>

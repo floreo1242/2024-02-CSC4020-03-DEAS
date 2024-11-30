@@ -28,8 +28,11 @@ public class EventService {
     @Transactional
     public boolean createEvent(CreateEventRequest request) {
         try {
-            System.out.println("Apply End Time: " + request.getApplyEndTime());
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Member member = memberRepository.findById(auth.getName())
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
             Event event = Event.builder()
+                    .creator(member)
                     .name(request.getName())
                     .tag(request.getTag())
                     .description(request.getDescription())
@@ -70,33 +73,35 @@ public class EventService {
                     .event(event)
                     .build();
             applyRepository.save(apply);
-            request.getAnswers().forEach((questionId, answer) -> {
-                Question question = questionRepository.findById(questionId)
-                        .orElseThrow(() -> new IllegalArgumentException("Question not found"));
-                QuestionType questionType = question.getType();
-                switch (questionType) {
-                    case ESSAY -> {
-                        Answer answerEntity = Answer.builder()
-                                .apply(apply)
-                                .question(question)
-                                .type(questionType)
-                                .answer(answer)
-                                .build();
-                        answerRepository.save(answerEntity);
+            if (request.getAnswers() != null) {
+                request.getAnswers().forEach((questionId, answer) -> {
+                    Question question = questionRepository.findById(questionId)
+                            .orElseThrow(() -> new IllegalArgumentException("Question not found"));
+                    QuestionType questionType = question.getType();
+                    switch (questionType) {
+                        case ESSAY -> {
+                            Answer answerEntity = Answer.builder()
+                                    .apply(apply)
+                                    .question(question)
+                                    .type(questionType)
+                                    .answer(answer)
+                                    .build();
+                            answerRepository.save(answerEntity);
+                        }
+                        case CHOICE -> {
+                            Choice choice = choiceRepository.findById(Integer.parseInt(answer))
+                                    .orElseThrow(() -> new IllegalArgumentException("Choice not found"));
+                            Answer answerEntity = Answer.builder()
+                                    .apply(apply)
+                                    .question(question)
+                                    .type(questionType)
+                                    .choice(choice)
+                                    .build();
+                            answerRepository.save(answerEntity);
+                        }
                     }
-                    case CHOICE -> {
-                        Choice choice = choiceRepository.findById(Integer.parseInt(answer))
-                                .orElseThrow(() -> new IllegalArgumentException("Choice not found"));
-                        Answer answerEntity = Answer.builder()
-                                .apply(apply)
-                                .question(question)
-                                .type(questionType)
-                                .choice(choice)
-                                .build();
-                        answerRepository.save(answerEntity);
-                    }
-                }
-            });
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;

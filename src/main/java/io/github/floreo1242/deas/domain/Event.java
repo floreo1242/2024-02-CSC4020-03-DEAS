@@ -19,6 +19,10 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id")
+    private Member creator;
+
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -37,7 +41,8 @@ public class Event {
     private String contact;
 
     @Builder
-    public Event(String name, EventTag tag, String description, Integer maxParticipant, LocalDateTime applyStartTime, LocalDateTime applyEndTime, String organizer, String contact) {
+    public Event(Member creator, String name, EventTag tag, String description, Integer maxParticipant, LocalDateTime applyStartTime, LocalDateTime applyEndTime, String organizer, String contact) {
+        this.creator = creator;
         this.name = name;
         this.tag = tag;
         this.description = description;
