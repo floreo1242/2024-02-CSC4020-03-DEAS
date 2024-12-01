@@ -3,6 +3,7 @@ package io.github.floreo1242.deas.domain.ids;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,12 @@ public class EventLocationId implements Serializable {
 
     @Column(name = "location_id")
     private String locationId;
+
+    @Builder
+    public EventLocationId(Integer eventId, String locationId) {
+        this.eventId = eventId;
+        this.locationId = locationId;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -50,6 +50,16 @@
         <p
           th:text="${#temporals.format(event.applyEndTime, 'yyyy-MM-dd HH:mm')}"
         ></p>
+        <h2>장소</h2>
+        <p>[[${eventLocation.location.id}]]</p>
+        <h2>행사 시작일</h2>
+        <p
+          th:text="${#temporals.format(eventLocation.startTime, 'yyyy-MM-dd HH:mm')}"
+        ></p>
+        <h2>행사 종료일</h2>
+        <p
+          th:text="${#temporals.format(eventLocation.endTime, 'yyyy-MM-dd HH:mm')}"
+        ></p>
         <h2>주최처</h2>
         <p>[[${event.organizer}]]</p>
         <h2>설명</h2>

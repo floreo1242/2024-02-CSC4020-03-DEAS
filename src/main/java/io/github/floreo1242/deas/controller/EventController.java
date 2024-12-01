@@ -56,6 +56,7 @@ public class EventController {
     @GetMapping("/event/{eventId}")
     public String event(@PathVariable Integer eventId, Model model) {
         model.addAttribute("event", eventService.getEventById(eventId));
+        model.addAttribute("eventLocation", eventService.getLocationByEvent(eventId));
         return "event-detail";
     }
 

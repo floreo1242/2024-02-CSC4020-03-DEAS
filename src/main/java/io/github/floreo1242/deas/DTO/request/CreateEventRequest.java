@@ -3,7 +3,6 @@ package io.github.floreo1242.deas.DTO.request;
 import io.github.floreo1242.deas.domain.EventTag;
 import io.github.floreo1242.deas.domain.QuestionType;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +21,10 @@ public class CreateEventRequest {
     private LocalDateTime applyStartTime;
 
     private LocalDateTime applyEndTime;
+
+    private LocalDateTime eventStartTime;
+
+    private LocalDateTime eventEndTime;
 
     private String organizer;
 

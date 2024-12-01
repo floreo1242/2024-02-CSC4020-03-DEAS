@@ -4,6 +4,7 @@ import io.github.floreo1242.deas.DTO.request.ApplyEventRequest;
 import io.github.floreo1242.deas.DTO.request.CreateEventRequest;
 import io.github.floreo1242.deas.DTO.response.EventParticipantResponse;
 import io.github.floreo1242.deas.domain.*;
+import io.github.floreo1242.deas.domain.ids.EventLocationId;
 import io.github.floreo1242.deas.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,8 @@ public class EventService {
     private final ApplyRepository applyRepository;
     private final ChoiceRepository choiceRepository;
     private final AnswerRepository answerRepository;
+    private final LocationRepository locationRepository;
+    private final EventLocationRepository eventLocationRepository;
 
     @Transactional
     public boolean createEvent(CreateEventRequest request) {
@@ -48,6 +51,19 @@ public class EventService {
             for (CreateEventRequest.QuestionRequest questionRequest : request.getQuestions()) {
                 questionService.createQuestion(event, questionRequest);
             }
+            Location location = locationRepository.findById(request.getLocationId())
+                    .orElseThrow(() -> new RuntimeException("Location not found"));
+            EventLocation eventLocation = EventLocation.builder()
+                    .id(EventLocationId.builder()
+                            .eventId(event.getId())
+                            .locationId(request.getLocationId())
+                            .build())
+                    .event(event)
+                    .location(location)
+                    .startTime(request.getEventStartTime())
+                    .endTime(request.getEventEndTime())
+                    .build();
+            eventLocationRepository.save(eventLocation);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -80,6 +96,11 @@ public class EventService {
 
     public Event getEventById(Integer eventId) {
         return eventRepository.findById(eventId).orElse(null);
+    }
+
+    public EventLocation getLocationByEvent(Integer eventId) {
+        Event event = getEventById(eventId);
+        return eventLocationRepository.findByEvent(event);
     }
 
     @Transactional

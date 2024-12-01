@@ -14,10 +14,10 @@ public interface LocationRepository extends JpaRepository<Location, String> {
 
     @Query("""
               SELECT l FROM Location l
-              WHERE l.id NOT IN (
-                  SELECT el.location.id FROM EventLocation el
-                  WHERE (el.startTime < :end AND el.endTime > :start)
-              )
+              LEFT JOIN EventLocation el ON el.location.id = l.id
+              AND el.startTime < :end
+              AND el.startTime > :start
+              WHERE el.event.id IS NULL
             """)
     List<Location> findAvailableLocations(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }

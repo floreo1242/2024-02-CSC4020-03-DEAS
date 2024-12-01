@@ -49,13 +49,32 @@
           />
         </div>
         <div>
+          <label for="eventStartTime">행사 시작일</label>
+          <input
+            type="datetime-local"
+            id="eventStartTime"
+            name="eventStartTime"
+            required
+            onchange="filterLocations()"
+          />
+        </div>
+        <div>
+          <label for="eventEndTime">행사 종료일</label>
+          <input
+            type="datetime-local"
+            id="eventEndTime"
+            name="eventEndTime"
+            required
+            onchange="filterLocations()"
+          />
+        </div>
+        <div>
           <label for="applyStartTime">신청 시작일</label>
           <input
             type="datetime-local"
             id="applyStartTime"
             name="applyStartTime"
             required
-            onchange="filterLocations()"
           />
         </div>
         <div>
@@ -65,7 +84,6 @@
             id="applyEndTime"
             name="applyEndTime"
             required
-            onchange="filterLocations()"
           />
         </div>
         <div>
@@ -166,12 +184,12 @@
     }
 
     function filterLocations() {
-      const applyStartTime = document.getElementById('applyStartTime').value;
-      const applyEndTime = document.getElementById('applyEndTime').value;
+      const eventStartTime = document.getElementById('eventStartTime').value;
+      const eventEndTime = document.getElementById('eventEndTime').value;
 
-      if (applyStartTime && applyEndTime) {
+      if (eventStartTime && eventEndTime) {
         fetch(
-          `/api/available-locations?startTime=${applyStartTime}&endTime=${applyEndTime}`
+          `/api/available-locations?startTime=${eventStartTime}&endTime=${eventEndTime}`
         )
           .then((response) => {
             if (!response.ok) {
