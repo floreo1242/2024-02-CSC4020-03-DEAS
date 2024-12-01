@@ -172,4 +172,13 @@ public class EventService {
                 .map(Apply::getEvent)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void deleteEvent(Integer eventId) {
+        try {
+            eventRepository.deleteById(eventId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

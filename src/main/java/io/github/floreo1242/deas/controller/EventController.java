@@ -81,4 +81,10 @@ public class EventController {
         model.addAttribute("applyDetailResponse", applyService.getApplyDetails(eventId));
         return "apply-detail";
     }
+
+    @GetMapping("/event/delete/{eventId}")
+    public String delete(@PathVariable Integer eventId) {
+        eventService.deleteEvent(eventId);
+        return "redirect:/event";
+    }
 }

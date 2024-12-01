@@ -19,7 +19,10 @@
           <thead>
             <tr>
               <th>행사명</th>
-              <th>지원자 이름</th>
+              <th>학번/교번</th>
+              <th>이름</th>
+              <th>소속</th>
+              <th>연락처</th>
               <th>질문</th>
               <th>답변</th>
             </tr>
@@ -34,10 +37,28 @@
                   행사명
                 </td>
                 <td
+                  th:text="${applyDetail.apply.member.id}"
+                  th:attr="rowspan=${#lists.size(applyDetail.answerList) == 0 ? 1 : #lists.size(applyDetail.answerList)}"
+                >
+                  학번/교번
+                </td>
+                <td
                   th:text="${applyDetail.apply.member.name}"
                   th:attr="rowspan=${#lists.size(applyDetail.answerList) == 0 ? 1 : #lists.size(applyDetail.answerList)}"
                 >
-                  지원자 이름
+                  이름
+                </td>
+                <td
+                  th:text="${applyDetail.apply.member.affiliation}"
+                  th:attr="rowspan=${#lists.size(applyDetail.answerList) == 0 ? 1 : #lists.size(applyDetail.answerList)}"
+                >
+                  소속
+                </td>
+                <td
+                  th:text="${applyDetail.apply.member.contact}"
+                  th:attr="rowspan=${#lists.size(applyDetail.answerList) == 0 ? 1 : #lists.size(applyDetail.answerList)}"
+                >
+                  연락처
                 </td>
                 <td
                   class="td1"
