@@ -77,14 +77,6 @@
               >삭제</a
             >
           </div>
-          <div
-            th:each="apply : ${event.applies}"
-            th:if="${apply.member.id == session.id and event.applyStartTime.isBefore(T(java.time.LocalDateTime).now()) and event.applyEndTime.isAfter(T(java.time.LocalDateTime).now())}"
-          >
-            <a th:href="@{'/event/answer/edit/' + ${event.id}}" class="button"
-              >답변수정</a
-            >
-          </div>
         </div>
       </div>
     </main>
